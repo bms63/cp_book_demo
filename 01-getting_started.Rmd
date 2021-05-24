@@ -1,0 +1,33 @@
+# Getting Started with R {#intro}
+
+Getting started with R at Pharma Inc. can be intimidating.  Those within the R Implementation group have curated a select group of resources to help ease into the use of R.  We have also created several use case example of creating displays within our company and demonstrate how to do comparison using `diffdf`
+
+## Using R at Pharma Inc.
+
+We have developed several in-depth trainings for getting up and running R.  
+
+ * Training 1
+ * Training 2
+ * Training 3
+ 
+External Training that we recommend:
+
+*  [The John Hopkins Data Science Classes on Cousera](https://www.coursera.org/specializations/jhu-data-science?)
+*  [R for Data Science](https://r4ds.had.co.nz/)
+
+## Developing Code
+
+RStudio is the preferred Interactive Development Environment (IDE) for developing code at Pharma Inc.   The video below will give you a brief tutorial on the different parts of the IDE.
+
+<iframe width="560" height="315" src="https://fast.wistia.net/embed/iframe/520zbd3tij?videoFoam=true" frameborder="0" allowfullscreen></iframe>
+
+##  Accessing the data
+
+```{r}
+# Access to SDTM data in Production
+sdtmdata <- "/compound/studyid/repeff/sdtm"
+
+# Access to ADaM data in Production
+adamdata <- "/compound/studyid/repeff/adamdata"
+```
+

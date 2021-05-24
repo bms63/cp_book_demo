@@ -1,0 +1,7 @@
+# Using diffdf for Comparison 
+
+```{r, eval=FALSE}
+diffdf(t_ae_sum, q_t_ae_sum_tsp,
+       keys = c("AESOC", "summaryLevel", "AEDECOD"),
+       file = "qc_t_ae_sum.lst")
+```

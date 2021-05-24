@@ -1,0 +1,95 @@
+# Use Cases
+
+
+```{r, echo =FALSE}
+n_percent <- function (n, percent, dem_pl = NULL, include_percent = TRUE) 
+{
+    if (is.numeric(dem_pl)) {
+        percent_c <- case_when(percent < 1 & percent > 0 ~ paste0("<", 
+            format(1, nsmall = dem_pl)), percent > 99 & percent < 
+            100 ~ paste0(">99.", strrep("9", dem_pl)), TRUE ~ 
+            as.character(format(round(percent, dem_pl), nsmall = dem_pl)))
+    }
+    else {
+        percent_c <- case_when(percent < 1 & percent > 0 ~ "<1", 
+            percent > 99 & percent < 100 ~ ">99", TRUE ~ as.character(percent))
+    }
+    paste0(n, " (", percent_c, if_else(include_percent, "%", 
+        ""), ")")
+}
+
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+# Load Packages
+library(diffdf)
+library(dplyr)
+library(tidyr)
+library(haven)
+
+# Access the Adam and dddata folder
+
+# Load in the datasets from HARP
+adae_orig <- read_sas("./adamdata/adae.sas7bdat")
+adsl_orig <- read_sas("./adamdata/adsl.sas7bdat")
+
+# Getting Pop Counts
+adsl <- adsl_orig %>%
+  mutate(TRT01AN = 9, TRT01A = "Total") %>%
+  bind_rows(adsl_orig)
+
+bigN <- adsl %>%
+  filter(SAFFL == "Y") %>%
+  group_by(TRT01AN) %>%
+  summarise(N=n()) %>%
+  ungroup()
+
+# Pop counts from ADAE
+adae <- adae_orig %>%
+  mutate(TRT01AN = 9, TRT01A = "Total") %>%
+  bind_rows(adae_orig)
+
+adae1 <- adae %>%
+  filter(SAFFL == "Y") %>%
+  select(STUDYID, TRT01AN, TRT01A, USUBJID, AEDECOD, AESOC) %>%
+  distinct(.keep_all = TRUE)
+
+# Overall Counts
+adae2al <- adae1 %>%
+  group_by(TRT01AN) %>%
+  summarise(n = n_distinct(USUBJID)) %>%
+  mutate(AESOC = "", AEDECOD = "ANY EVENT", summaryLevel = 1) %>%
+  ungroup()
+
+# SOC counts
+adae2sc <- adae1 %>%
+  group_by(AESOC, TRT01AN) %>%
+  summarise(n = n_distinct(USUBJID)) %>%
+  mutate(AEDECOD = "Any event", summaryLevel = 2) %>%
+  ungroup()
+
+# PT counts
+adae2pt <- adae1 %>%
+  group_by(AESOC, AEDECOD, TRT01AN) %>%
+  summarise(n = n_distinct(USUBJID)) %>%
+  mutate(summaryLevel = 3) %>%
+  ungroup()
+
+# Calculate Percentages and format cells with counts and percents
+q_t_ae_fmt <- rbind(adae2al, adae2pt, adae2sc) %>%
+  inner_join(bigN, by = c("TRT01AN")) %>%
+  mutate(
+    per = ((n / N) * 100),
+    aval = n_percent(n, per, dem_pl = 1)
+  ) %>%
+  select(-n, -N, -per)
+
+# Long to Wide
+# Updated to Pivot Wider
+q_t_ae_sum_tsp <- q_t_ae_fmt %>%
+  pivot_wider(id_cols = c("TRT01AN","summaryLevel", "AESOC", "AEDECOD"),
+              names_from=TRT01AN, names_prefix="tt_ac",
+              values_from=aval, values_fill = list(aval = "0"))
+
+```

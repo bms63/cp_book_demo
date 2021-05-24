@@ -1,0 +1,22 @@
+--- 
+title: "R Programming Guidance Documentation"
+author: "Ben Straub"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+github-repo: rstudio/bookdown-demo
+description: "Documentation for using R in the Department"
+---
+
+# Purpose {-}
+
+This is a minimal example created to discuss a paper written for Pharamsug 2021.  This will be the first page a reader will see when clicking on your bookdown site.  
+
+<font color=red><b><u>IMPORTANT NOTE:</u></b></font><br>
+* This page is rendered from the `index.Rmd` file
+* The YAML at the top of the `index.Rmd` files controls a lot of how the book is outputted! 
+
+
+
+

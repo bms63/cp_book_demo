@@ -1,0 +1,11 @@
+bookdown::gitbook:
+  css: [./style.css, ./toc.css]
+  config:
+    toc:
+      collapse: section
+      before: |
+        <li><center><img src="img/pharmasug.png" alt="logo" style="margin: 1 1 1 1"></center></li>
+      after: |
+        <li><a href="https://bookdown.org/yihui/bookdown/" target="blank">Bookdown Website</a></li>
+        <li><a href="https://examplesite.org/" target="blank">Example Website</a></li>
+
